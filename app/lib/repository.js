@@ -18,12 +18,12 @@ Repository.prototype.updateAndDownloadGame = function(params) {
 			var Compression = require('ti.compression');
 		    var result = Compression.unzip(Alloy.Globals.appPath, f.nativePath, true);
 		    if (result == 'success') {
-		    	var myGames = [];
-				if(Ti.App.Properties.getString("myGames")) {
-					myGames = JSON.parse(Ti.App.Properties.getString("myGames"));
+		    	var myassets = [];
+				if(Ti.App.Properties.getString("myassets")) {
+					myassets = JSON.parse(Ti.App.Properties.getString("myassets"));
 				}
-		    	myGames.push(params.game);
-				Ti.App.Properties.setString("myGames", JSON.stringify(myGames));
+		    	myassets.push(params.game);
+				Ti.App.Properties.setString("myassets", JSON.stringify(myassets));
 	
 				if(params && params.onsuccess){
 		    		params.onsuccess();
@@ -91,10 +91,10 @@ Repository.prototype.updateAndDownloadBanner = function(params) {
 	}
 };
 
-Repository.prototype.updateGames = function(params) {
+Repository.prototype.updateassets = function(params) {
 	var that = this;
 	if(this.repoConfig){
-		Ti.App.Properties.setString("games", JSON.stringify(that.repoConfig["games"]));
+		Ti.App.Properties.setString("assets", JSON.stringify(that.repoConfig["assets"]));
 		params.onsuccess();
 	} else {
 		params.onerror();

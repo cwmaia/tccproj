@@ -2,7 +2,7 @@
 	"global": {
 		"thinServerHost": "127.0.0.1",
 		"thinServerPort": "40404",
-		"repoUrl": "https://googledrive.com/host/0B5u8-Kt1pQyqfkVzV1B0b2drMWh5U3B5aEIxVVlHVDRlaHltTVFvSnhBYUNJQzVRNERybzQ/",
+		"repoUrl": "https://raw.githubusercontent.com/cwmaia/tccproj/master/repofiles/",
 		"repoResourcesFile": "resources.json"
 	}, 
 	"env:development": {}, 

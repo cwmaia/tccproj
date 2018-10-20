@@ -4,7 +4,7 @@
         "file": "banner.zip",
         "version": 1.4
     }, 
-    "pages": [
+    "assets": [
         {
             "id": "1432665947",
             "name": "Quadrado",

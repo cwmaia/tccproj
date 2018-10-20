@@ -17,7 +17,7 @@ function update() {
 			//test after update and has no connection...
 			onerror: function(){
 				renderBanner();
-				renderGames();
+				renderassets();
 			},
 			onload: function(){
 				repo.updateAndDownloadBanner(
@@ -30,13 +30,13 @@ function update() {
 						}
 					}
 				);
-				repo.updateGames(
+				repo.updateassets(
 					{
 						onsuccess: function() {
-							renderGames();
+							renderassets();
 						},
 						onerror: function(){
-							renderGames();
+							renderassets();
 						}
 					}
 				);
@@ -46,19 +46,19 @@ function update() {
 	);
 }
 
-function renderGames() {
+function renderassets() {
 	var scrollableView = $.UI.create('ScrollableView', {
     	id: "scrollableView",
     	showPagingControl: true
     });
 	
-	if(Ti.App.Properties.getString("games")) {
-		var myGames = renderMyGames(scrollableView);
-		var remoteGames = JSON.parse(Ti.App.Properties.getString("games"));
+	if(Ti.App.Properties.getString("assets")) {
+		var myassets = renderMyassets(scrollableView);
+		var remoteassets = JSON.parse(Ti.App.Properties.getString("assets"));
 		
-		for(var i in remoteGames) {
-			var game = remoteGames[i];
-			var myGame = _.where(myGames, {id: game["id"]})[0];
+		for(var i in remoteassets) {
+			var game = remoteassets[i];
+			var myGame = _.where(myassets, {id: game["id"]})[0];
 			if(!myGame) {
 				scrollableView.addView(createGameView(game));
 			}
@@ -72,16 +72,16 @@ function renderGames() {
 		$.index.addEventListener("postlayout", onOpen);
 		$.index.open();
 	} else {
-		alert("Houve um problema ao recuperar os jogos, tente novamente mais tarde.");
+		alert("Could not load assets.");
 	}
 }
-function renderMyGames(scrollableView) {
-	var myGames = JSON.parse(Ti.App.Properties.getString("myGames"));
-	for(var i in myGames) {
-		var game = myGames[i];
+function renderMyassets(scrollableView) {
+	var myassets = JSON.parse(Ti.App.Properties.getString("myassets"));
+	for(var i in myassets) {
+		var game = myassets[i];
 		scrollableView.addView(createGameView(game));
 	}
-	return myGames;
+	return myassets;
 }
 function createGameView(game) {
 	/*
@@ -141,16 +141,16 @@ function createGameView(game) {
 function downloadAndPlay(params){
 	var _ = require('alloy/underscore')._;
 	//alert(JSON.stringify(game));
-	var myGames = [];
-	var remoteGames = [];
-	if(Ti.App.Properties.getString("myGames")) {
-		myGames = JSON.parse(Ti.App.Properties.getString("myGames"));
+	var myassets = [];
+	var remoteassets = [];
+	if(Ti.App.Properties.getString("myassets")) {
+		myassets = JSON.parse(Ti.App.Properties.getString("myassets"));
 	}
-	if(Ti.App.Properties.getString("games")) {
-		remoteGames = JSON.parse(Ti.App.Properties.getString("games"));	
+	if(Ti.App.Properties.getString("assets")) {
+		remoteassets = JSON.parse(Ti.App.Properties.getString("assets"));	
 	}
-	var myGame = _.where(myGames, {id: params.game["id"]})[0];
-	var remoteGame = _.where(remoteGames, {id: params.game["id"]})[0];
+	var myGame = _.where(myassets, {id: params.game["id"]})[0];
+	var remoteGame = _.where(remoteassets, {id: params.game["id"]})[0];
 	if(!remoteGame) {
 		if(!myGame){
 			alert("Não foi possível encontrar o jogo no repositótio");
