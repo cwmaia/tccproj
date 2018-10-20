@@ -1,0 +1,15 @@
+{
+    "banner": {
+        "id": "banner",
+        "file": "banner.zip",
+        "version": 1.4
+    }, 
+    "pages": [
+        {
+            "id": "1432665947",
+            "name": "Quadrado",
+            "file": "1432665947.zip",
+            "version": 0.2
+        }
+    ]
+}

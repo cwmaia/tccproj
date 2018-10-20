@@ -1,0 +1,12 @@
+<Alloy>
+	<Window class="container">
+		<View id="banner">
+			<ImageView id="logo"></ImageView>
+			<WebView id="webviewBanner"></WebView>	
+		</View>
+		<View id="hr"></View>
+		<View id="game_list">
+			
+		</View>
+	</Window>
+</Alloy>

@@ -1,0 +1,200 @@
+$.index.open();
+startService();
+
+var appPath;
+if(Ti.Platform.name == 'android'){
+	appPath = Ti.Filesystem.externalStorageDirectory;
+}else{
+	appPath = Ti.Filesystem.applicationDataDirectory;
+}
+var gamePath = appPath + "1432665947/";
+var fileIndex = gamePath + "index.html";
+
+var xhr = Titanium.Network.createHTTPClient();
+xhr.setTimeout(45000);
+xhr.onload = function(e) {
+	var f = Ti.Filesystem.getFile(appPath,'jogo.zip');
+	f.write(xhr.responseData); // write to the file
+	Ti.App.fireEvent('game_downloaded', {filepath:f.nativePath});
+};
+xhr.open('GET','https://googledrive.com/host/0B5u8-Kt1pQyqfkVzV1B0b2drMWh5U3B5aEIxVVlHVDRlaHltTVFvSnhBYUNJQzVRNERybzQ/1432665947.zip');
+xhr.send();
+
+
+Ti.App.addEventListener('game_downloaded', function(e) {
+	//alert(e.filepath);
+	//var gamePath = e.filepath.substring(0,e.filepath.lastIndexOf("/")+1);
+	//alert(gamePath);
+	var Compression = require('ti.compression');
+    var result = Compression.unzip(appPath, e.filepath, true);
+    if (result == 'success') {
+ 		var webview = Titanium.UI.createWebView({url:"http://127.0.0.1:40404/1432665947/index.html"});
+ 		//var webview = Titanium.UI.createWebView({url:"http://127.0.0.1:40404/1432665947/images/sp_box_choice-sheet0.png"});
+		$.index.add(webview);
+    }
+});
+
+function startService() {
+	var hostname = '127.0.0.1';
+	var port = 40404;
+	var connectedSockets = [];
+	
+	var acceptedCallbacks = {
+		error : function(e) {
+			Ti.UI.createAlertDialog({
+				title:"Socket error: "+e.socket.host,
+				message:e.error
+			}).show();
+			removeSocket(e.socket);
+		}
+	};
+	
+	///Ti.Platform.address,
+	var socket = Titanium.Network.Socket.createTCP({
+		host:hostname,
+		port: port,
+		accepted: function(e) {
+			var sock = e.inbound;
+			connectedSockets.push(sock);
+			Ti.API.info('ACCEPTED: '+sock.host+':'+sock.port);
+			socket.accept(acceptedCallbacks);
+			Ti.Stream.pump(sock, pumpCallback, 1024, true);
+		},
+		closed: function(e) {
+			Ti.API.info("Closed listener");
+		},
+		error: function(e) {
+			Ti.UI.createAlertDialog({
+				title:"Listener error: "+e.errorCode,
+				message:e.error
+			}).show();
+		}
+	});
+	
+	
+	socket.listen();
+	Ti.API.info( "Listening on "+socket.host+":"+socket.port);
+	socket.accept(acceptedCallbacks);
+
+	
+	// function write(){
+		// ///write something
+		// Ti.API.info("writing the "+fileIndex);
+// 		
+		// var plBlob = Titanium.Filesystem.getFile(fileIndex).read();
+		// var input = Ti.Stream.createStream({source:plBlob, mode:Ti.Stream.MODE_READ});
+// 	
+		// for (var index in connectedSockets) {
+			// var sock = connectedSockets[index];
+			// Ti.Stream.writeStream(input, sock, 4096);
+		// }
+	// };
+	
+	function removeSocket(sock) {
+		var index = connectedSockets.indexOf(sock);
+		if (index != -1) {
+			connectedSockets.splice(index,1);
+		}	
+	}
+	
+	function pumpCallback(e) {
+		//Ti.API.info(JSON.stringify(e));
+		if (e.bytesProcessed == -1) { // EOF
+			Ti.API.info("<EOF> - Closing the remote socket!");
+			e.source.close();
+			removeSocket(e.source);
+		}
+		else if (e.errorDescription == null || e.errorDescription == "") {
+			var req = e.buffer.toString();
+			var verb = req.substring(0, req.indexOf(" ")).trim();
+			var resource =  req.substring(req.indexOf(" ")+1,req.indexOf(" HTTP/")).trim();
+			
+			
+			Ti.API.info("--------------------");
+			Ti.API.info(req);
+			Ti.API.info(verb);
+			Ti.API.info(resource);
+			Ti.API.info("--------------------");
+			
+			var fileResource = appPath + resource;
+			
+			Ti.API.info("Sending "+fileResource);
+			var file = Titanium.Filesystem.getFile(fileResource);
+			
+			var response = Ti.createBuffer({length: 1024}),
+		    stream = Ti.Stream.createStream({mode: Ti.Stream.MODE_WRITE, source: response}),
+		    body = '';
+		    
+		    if(file.exists()) {
+			    body = file.read();
+				stream.write(
+			        Ti.createBuffer(
+			            {
+			                value: 'HTTP/1.1 200 OK\n'
+			                    + 'Cache-Control:no-cache\n'
+			                    + 'Pragma:no-cache\n'
+			                    + 'Content-Length: ' + body.length + '\n'
+			                    + 'Content-Type: ' + body.getMimeType() + '\n'
+			                    + "Date: Fri, 31 Dec 1999 23:59:59 GMT\n"
+			                    + "Connection: Keep-Alive\n"
+			                    + "Server: LJS Light Javascript Server\n"
+			                    + '\n'
+			            }
+			        )
+			    );
+				
+				
+				var bodyStream = Titanium.Stream.createStream({
+			        mode : Titanium.Stream.MODE_READ,
+			        source : body
+			    }),
+			 
+			    bodyBuffer = Ti.createBuffer({
+			        length : body.length
+			    });
+			 
+			    while ((bodyStream.read(bodyBuffer)) > 0) {}
+			    bodyStream.close();
+			 
+			    stream.write(bodyBuffer);
+				
+				/*
+				//geting data here ....... ? then send data from request .....
+				var msg = "HTTP/1.1 200 OK\n";
+				msg += "Date: Fri, 31 Dec 1999 23:59:59 GMT\n";
+				msg += "Connection: close\n";
+				
+				msg += "Content-Type: "+"image/png"+"\n";
+				
+				msg += "Content-Length: "+plBlob.length+"\n";
+				msg += "\n";
+				
+				msg += plBlob;
+				*/
+			} else {
+				stream.write(
+			        Ti.createBuffer(
+			            {
+			                value: 'HTTP/1.1 404 NOT FOUND\n'
+			                    + "Server: LJS Light Javascript Server\n"
+			                    + '\n'
+			            }
+			        )
+			    );
+			}
+				
+			
+			for (var index in connectedSockets) {
+				var sock = connectedSockets[index];
+				sock.write(response);
+				sock.close;
+			}
+			//connectedSockets[0].write(Ti.createBuffer({value: msg}));
+		} else {
+			Ti.API.info("READ ERROR: "+e.errorDescription);
+		}
+	}
+}
+
+
+

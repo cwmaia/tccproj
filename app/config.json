@@ -1,0 +1,16 @@
+{
+	"global": {
+		"thinServerHost": "127.0.0.1",
+		"thinServerPort": "40404",
+		"repoUrl": "https://googledrive.com/host/0B5u8-Kt1pQyqfkVzV1B0b2drMWh5U3B5aEIxVVlHVDRlaHltTVFvSnhBYUNJQzVRNERybzQ/",
+		"repoResourcesFile": "resources.json"
+	}, 
+	"env:development": {}, 
+	"env:test": {}, 
+	"env:production": {}, 
+	"os:android": {},
+	"os:blackberry": {},
+	"os:ios": {},
+	"os:mobileweb": {},
+	"dependencies": {}
+}
