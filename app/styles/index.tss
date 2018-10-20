@@ -20,25 +20,25 @@
 	height: "1%",
 	backgroundColor: "#FFF"
 }
-"#game_list": {
+"#asset_list": {
 	height: "59%",
 	backgroundColor: "#003e4c",
 	opacity: 0
 }
 
-".gameViewWraper": {
+".assetViewWraper": {
 	width: "100%",
 	height: "100%"
 }
-".gameView": {
+".assetView": {
 	layout: "vertical",
 	height: Titanium.UI.SIZE
 }
-".gameIcon": {
+".assetIcon": {
 	top: 10,
-	image: "/images/game_icon.png"
+	image: "/images/asset_icon.png"
 }
-".gameTitle": {
+".assetTitle": {
 	top: 10,
 	color: "#fff",
 	font:{
@@ -46,7 +46,7 @@
     	fontFamily: 'Trebuchet MS'
     }
 }
-".gameButton": {
+".assetButton": {
 	top: 10,
 	height: 60,
 	width: 130,

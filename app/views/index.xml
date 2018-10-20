@@ -5,7 +5,7 @@
 			<WebView id="webviewBanner"></WebView>	
 		</View>
 		<View id="hr"></View>
-		<View id="game_list">
+		<View id="asset_list">
 			
 		</View>
 	</Window>
