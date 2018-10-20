@@ -10,6 +10,12 @@
             "name": "Quadrado",
             "file": "1432665947.zip",
             "version": 0.2
+        },
+        {
+            "id": "flappy",
+            "name": "Flappy Bird",
+            "file": "flappy.zip",
+            "version": 0.1
         }
     ]
 }

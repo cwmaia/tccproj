@@ -202,7 +202,7 @@ function downloadAndPlay(params){
 
 //TODO open in a webview... (problem with local storage)
 function play(asset) {
-	Ti.Platform.openURL("http://" + Alloy.CFG.thinServerHost + ":" + Alloy.CFG.thinServerPort + "/" + asset["id"] + "/index.html");
+	$.webviewBanner.url = "http://" + Alloy.CFG.thinServerHost + ":" + Alloy.CFG.thinServerPort + "/" + asset["id"] + "/index.html";
 }
 
 function renderBanner() {
