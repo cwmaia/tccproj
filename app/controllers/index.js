@@ -3,7 +3,7 @@ var repo = new(require('repository'))();
 
 //first start the service...
 startThinServer();
-//update the banner and the game list
+//update the banner and the asset list
 update();
 
 
@@ -57,16 +57,16 @@ function renderassets() {
 		var remoteassets = JSON.parse(Ti.App.Properties.getString("assets"));
 		
 		for(var i in remoteassets) {
-			var game = remoteassets[i];
-			var myGame = _.where(myassets, {id: game["id"]})[0];
-			if(!myGame) {
-				scrollableView.addView(createGameView(game));
+			var asset = remoteassets[i];
+			var myasset = _.where(myassets, {id: asset["id"]})[0];
+			if(!myasset) {
+				scrollableView.addView(createassetView(asset));
 			}
 		}
-		$.game_list.removeAllChildren();
-		$.game_list.add(scrollableView);
+		$.asset_list.removeAllChildren();
+		$.asset_list.add(scrollableView);
 		var onOpen = function(){
-			$.game_list.animate({opacity:1, duration:500});
+			$.asset_list.animate({opacity:1, duration:500});
 			$.index.removeEventListener("postlayout", onOpen);
 		};
 		$.index.addEventListener("postlayout", onOpen);
@@ -78,47 +78,47 @@ function renderassets() {
 function renderMyassets(scrollableView) {
 	var myassets = JSON.parse(Ti.App.Properties.getString("myassets"));
 	for(var i in myassets) {
-		var game = myassets[i];
-		scrollableView.addView(createGameView(game));
+		var asset = myassets[i];
+		scrollableView.addView(createassetView(asset));
 	}
 	return myassets;
 }
-function createGameView(game) {
+function createassetView(asset) {
 	/*
-	<View class="gameViewWraper">--
-	    <View class="gameView">--
-	    	<ImageView class="gameIcon"></ImageView>
-	    	<Label class="gameTitle" text="Quadrado"></Label>
-	    	<Button class="gameButton" title="JOGAR"></Button>
+	<View class="assetViewWraper">--
+	    <View class="assetView">--
+	    	<ImageView class="assetIcon"></ImageView>
+	    	<Label class="assetTitle" text="Quadrado"></Label>
+	    	<Button class="assetButton" title="JOGAR"></Button>
 	    </View>
 	</View>
 	*/
 
-	var gameViewWraper = $.UI.create('View', {
-    	classes: ["gameViewWraper"]
+	var assetViewWraper = $.UI.create('View', {
+    	classes: ["assetViewWraper"]
     });
     
-    var gameView = $.UI.create('View', {
-    	classes: ["gameView"]
+    var assetView = $.UI.create('View', {
+    	classes: ["assetView"]
     });
-    gameView.add(
+    assetView.add(
 		$.UI.create('ImageView', {
-			classes: ["gameIcon"]
+			classes: ["assetIcon"]
 		})
 	);
-	gameView.add(
+	assetView.add(
 		$.UI.create('Label', {
-			classes: ["gameTitle"],
-			text: game["name"]
+			classes: ["assetTitle"],
+			text: asset["name"]
 		})
 	);
 	var playButton = $.UI.create('Button', {
-			classes: ["gameButton"],
+			classes: ["assetButton"],
 			title: "JOGAR"
 	});
 	playButton.addEventListener("click", function(){
 		downloadAndPlay({
-			game: game,
+			asset: asset,
 			onerror: function() {
 				playButton.setTitle("JOGAR");
 				playButton.setTouchEnabled( true );
@@ -132,15 +132,15 @@ function createGameView(game) {
 				playButton.setTouchEnabled( false );
 			}
 		});
-	}.bind({game: game}));
-	gameView.add(playButton);
-    gameViewWraper.add(gameView);
-	return gameViewWraper;
+	}.bind({asset: asset}));
+	assetView.add(playButton);
+    assetViewWraper.add(assetView);
+	return assetViewWraper;
 }
 
 function downloadAndPlay(params){
 	var _ = require('alloy/underscore')._;
-	//alert(JSON.stringify(game));
+	//alert(JSON.stringify(asset));
 	var myassets = [];
 	var remoteassets = [];
 	if(Ti.App.Properties.getString("myassets")) {
@@ -149,40 +149,40 @@ function downloadAndPlay(params){
 	if(Ti.App.Properties.getString("assets")) {
 		remoteassets = JSON.parse(Ti.App.Properties.getString("assets"));	
 	}
-	var myGame = _.where(myassets, {id: params.game["id"]})[0];
-	var remoteGame = _.where(remoteassets, {id: params.game["id"]})[0];
-	if(!remoteGame) {
-		if(!myGame){
+	var myasset = _.where(myassets, {id: params.asset["id"]})[0];
+	var remoteasset = _.where(remoteassets, {id: params.asset["id"]})[0];
+	if(!remoteasset) {
+		if(!myasset){
 			alert("Não foi possível encontrar o jogo no repositótio");
 			if(params && params.onerror){
 	    		params.onerror();
 	    	}
 		} else {
 	    	if(params && params.onsuccess){
-	    		play(myGame);
+	    		play(myasset);
 	    		params.onsuccess();
 	    	}
 		}
 	} else {
-		if(!myGame || remoteGame["version"] > myGame["version"]){
-			Ti.API.info("Game "+params.game["id"]+" is out of date, updating...");
+		if(!myasset || remoteasset["version"] > myasset["version"]){
+			Ti.API.info("asset "+params.asset["id"]+" is out of date, updating...");
 			if(params && params.ondownloadstart){
 	    		params.ondownloadstart();
 	    	}
-			repo.updateAndDownloadGame(
+			repo.updateAndDownloadasset(
 				{
-					game: params.game,
+					asset: params.asset,
 					onsuccess: function() {
-						play(params.game);
+						play(params.asset);
 						if(params && params.onsuccess){
 				    		params.onsuccess();
 				    	}
 					},
 					onerror: function(){
-						if(!myGame) {
-							alert("Ocorreu uma falha ao atualizar o game");
+						if(!myasset) {
+							alert("Ocorreu uma falha ao atualizar o asset");
 						} else {
-							play(myGame);
+							play(myasset);
 						}
 						if(params && params.onerror){
 				    		params.onerror();
@@ -191,8 +191,8 @@ function downloadAndPlay(params){
 				}
 			);
 		} else {
-			Ti.API.info("Game "+params.game["id"]+" is up to date...");
-			play(params.game);
+			Ti.API.info("asset "+params.asset["id"]+" is up to date...");
+			play(params.asset);
 			if(params && params.onsuccess){
 	    		params.onsuccess();
 	    	}
@@ -201,8 +201,8 @@ function downloadAndPlay(params){
 }
 
 //TODO open in a webview... (problem with local storage)
-function play(game) {
-	Ti.Platform.openURL("http://" + Alloy.CFG.thinServerHost + ":" + Alloy.CFG.thinServerPort + "/" + game["id"] + "/index.html");
+function play(asset) {
+	Ti.Platform.openURL("http://" + Alloy.CFG.thinServerHost + ":" + Alloy.CFG.thinServerPort + "/" + asset["id"] + "/index.html");
 }
 
 function renderBanner() {

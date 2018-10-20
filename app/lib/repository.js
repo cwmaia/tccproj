@@ -3,17 +3,17 @@ var Repository = module.exports = function(){
 	this.repoResourcesFile = Alloy.CFG.repoResourcesFile;
 	this.repoConfig = undefined;
 	this.tmpBannerZip = "banner.zip";
-	this.tmpGameZip = "game.zip";
+	this.tmpassetZip = "asset.zip";
 };
 
-Repository.prototype.updateAndDownloadGame = function(params) {
+Repository.prototype.updateAndDownloadasset = function(params) {
 	var that = this;
 	if(this.repoConfig){
-		//alert("updateAndDownloadGame >>>" + JSON.stringify(params.game));
+		//alert("updateAndDownloadasset >>>" + JSON.stringify(params.asset));
 		var xhr = Titanium.Network.createHTTPClient();
 		xhr.setTimeout(45000);
 		xhr.onload = function(e) {
-			var f = Ti.Filesystem.getFile(Alloy.Globals.appPath, that.tmpGameZip);
+			var f = Ti.Filesystem.getFile(Alloy.Globals.appPath, that.tmpassetZip);
 			f.write(xhr.responseData); // write to the file
 			var Compression = require('ti.compression');
 		    var result = Compression.unzip(Alloy.Globals.appPath, f.nativePath, true);
@@ -22,14 +22,14 @@ Repository.prototype.updateAndDownloadGame = function(params) {
 				if(Ti.App.Properties.getString("myassets")) {
 					myassets = JSON.parse(Ti.App.Properties.getString("myassets"));
 				}
-		    	myassets.push(params.game);
+		    	myassets.push(params.asset);
 				Ti.App.Properties.setString("myassets", JSON.stringify(myassets));
 	
 				if(params && params.onsuccess){
 		    		params.onsuccess();
 		    	}
 		    } else {
-		    	Ti.API.error("Could not extract game file...");
+		    	Ti.API.error("Could not extract asset file...");
 		    	if(params && params.onerror){
 		    		params.onerror();
 		    	}
@@ -42,7 +42,7 @@ Repository.prototype.updateAndDownloadGame = function(params) {
 	    	}
 		};
 		
-		xhr.open('GET', Alloy.CFG.repoUrl + params.game["file"]);
+		xhr.open('GET', Alloy.CFG.repoUrl + params.asset["file"]);
 		xhr.send();
 	} else {
 		params.onerror();
