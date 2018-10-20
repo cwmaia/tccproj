@@ -9,8 +9,6 @@
 // object. For example:
 //
 // Alloy.Globals.someGlobalFunction = function(){};
-if(Ti.Platform.name == 'android'){
-	Alloy.Globals.appPath = Ti.Filesystem.externalStorageDirectory;
-}else{
+
+//	Alloy.Globals.appPath = Ti.Filesystem.externalStorageDirectory;
 	Alloy.Globals.appPath = Ti.Filesystem.applicationDataDirectory;
-}

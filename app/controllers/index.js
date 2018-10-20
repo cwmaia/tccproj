@@ -180,7 +180,7 @@ function downloadAndPlay(params){
 					},
 					onerror: function(){
 						if(!myasset) {
-							alert("Ocorreu uma falha ao atualizar o asset");
+							// alert("Update Assset Failed");
 						} else {
 							play(myasset);
 						}

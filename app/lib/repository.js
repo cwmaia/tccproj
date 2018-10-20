@@ -36,7 +36,7 @@ Repository.prototype.updateAndDownloadasset = function(params) {
 		    }
 		};
 		xhr.onerror = function(e) {
-			Ti.API.error("Could not load banner file...");
+			alert(JSON.stringify(e));
 			if(params && params.onerror){
 	    		params.onerror(e);
 	    	}
