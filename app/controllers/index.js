@@ -1,5 +1,6 @@
 var ts = new(require('thinserver'))();
 var repo = new(require('repository'))();
+var proxy = new(require('resource_proxy'))();
 
 //first start the service...
 startThinServer();
@@ -206,6 +207,9 @@ function play(asset) {
 }
 
 function renderBanner() {
+	$.webviewBanner.addEventListener('beforeload', function() {
+		proxy.appyProxyRule($.webviewBanner);
+	});
 	$.webviewBanner.addEventListener('load', function(e) {
 		//$.logo.animate({opacity:0, duration:500});
    		//$.webviewBanner.animate({opacity:1, duration:500});

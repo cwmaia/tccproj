@@ -15,7 +15,14 @@
             "id": "flappy",
             "name": "Flappy Bird",
             "file": "flappy.zip",
-            "version": 0.1
+            "version": 0.2
+        }
+    ],
+    "proxyRules": [
+        {
+            "intercept": "^http:\/\/statistics.save",
+            "action": "rewriteServer",
+            "to": "http://mobile.statistics.save"
         }
     ]
 }

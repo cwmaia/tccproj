@@ -108,6 +108,7 @@ Repository.prototype.load = function(params) {
 	xhr.setTimeout(45000);
 	xhr.onload = function(e) {
 		that.repoConfig = JSON.parse(this.responseText);
+		Alloy.Globals.proxyRules = that.repoConfig.proxyRules;
 		Ti.API.info("Repository loaded...");
 		if(params && params.onload){
 			params.onload(this);
