@@ -207,7 +207,7 @@ function play(asset) {
 }
 
 function renderBanner() {
-	$.webviewBanner.addEventListener('beforeload', function() {
+	$.webviewBanner.addEventListener('load', function() {
 		proxy.appyProxyRule($.webviewBanner);
 	});
 	$.webviewBanner.addEventListener('load', function(e) {
