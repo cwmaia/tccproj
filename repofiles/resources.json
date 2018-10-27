@@ -20,9 +20,9 @@
     ],
     "proxyRules": [
         {
-            "intercept": "^http:\/\/statistics.save",
+            "intercept": "^http:\/\/statistics.save/",
             "action": "rewriteServer",
-            "to": "https://play.google.com/"
+            "to": "https://play.google.com/store/apps/details?id=com.olivierpalma.flappy"
         }
     ]
 }
