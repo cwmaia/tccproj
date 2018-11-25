@@ -22,7 +22,7 @@
         {
             "intercept": "^http:\/\/statistics.save/",
             "action": "rewriteServer",
-            "to": "https://play.google.com/store/apps/details?id=com.olivierpalma.flappy"
+            "to": "https://jogos.uol.com.br/ultimas-noticias/2014/02/09/apos-enorme-sucesso-desenvolvedor-tira-jogo-flappy-bird-do-ar.htm"
         }
     ]
 }
