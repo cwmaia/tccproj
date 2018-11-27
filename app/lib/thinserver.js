@@ -4,6 +4,8 @@ var ThinServer = module.exports = function(){
 	this.connectedSockets = [];
 };
 
+//instance and open tcp socket ((LISTEN AND RETURN))
+
 ThinServer.prototype.startService = function() {
 	var that = this;
 	var acceptedCallbacks = {
@@ -14,6 +16,7 @@ ThinServer.prototype.startService = function() {
 		}
 	};
 	
+//Receive message and treat it // assemble TS listener
 
 	var socket = Titanium.Network.Socket.createTCP({
 		host: this.hostname,
@@ -49,6 +52,7 @@ removeSocket = function(connectedSockets, sock) {
 	
 pumpCallback = function(e) {
 	//Ti.API.info(JSON.stringify(e));
+	// receive an object
 	if (e.bytesProcessed == -1) { // EOF
 		Ti.API.info("<EOF> - Closing the remote socket!");
 		e.source.close();
@@ -59,11 +63,11 @@ pumpCallback = function(e) {
 		var verb = req.substring(0, req.indexOf(" ")).trim();
 		var resource =  req.substring(req.indexOf(" ")+1,req.indexOf(" HTTP/")).trim();
 		
-		
+		//treat http request from resource viewer
 		var fileResource = Alloy.Globals.appPath + resource;
 		
 		Ti.API.info("======>>> Sending "+fileResource);
-		var file = Titanium.Filesystem.getFile(fileResource);
+		var file = Titanium.Filesystem.getFile(fileResource); //get what I need
 		var response = Ti.createBuffer({length: 1024}),
 	    stream = Ti.Stream.createStream({mode: Ti.Stream.MODE_WRITE, source: response}),
 	    body = '';
@@ -85,7 +89,7 @@ pumpCallback = function(e) {
 		            }
 		        )
 		    );
-			
+			// respond the request with http to resource viewr . several request are made to build the webview
 			var bodyStream = Titanium.Stream.createStream({
 		        mode : Titanium.Stream.MODE_READ,
 		        source : body

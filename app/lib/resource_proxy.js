@@ -2,7 +2,7 @@ var Proxy = module.exports = function(){
 	this.repoUrl = Alloy.CFG.repoUrl;
 	this.repoResourcesFile = Alloy.CFG.repoResourcesFile;
 };
-
+// regulates what if request must be redirected based on configuration before moving to resource viewer
 Proxy.prototype.appyProxyRule = function(webview) {
 	var that = this;
 	//alert('beforeload: ' + webview.url);

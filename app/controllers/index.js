@@ -2,7 +2,7 @@ var ts = new(require('thinserver'))();
 var repo = new(require('repository'))();
 var proxy = new(require('resource_proxy'))();
 
-//first start the service...
+//ThinServer <- I/O
 startThinServer();
 //update the banner and the asset list
 update();
@@ -12,6 +12,8 @@ function startThinServer() {
 	ts.startService();
 }
 
+
+//Titanium Lifecycle method, before loading
 function update() {
 	repo.load(
 		{
@@ -71,7 +73,7 @@ function renderassets() {
 			$.index.removeEventListener("postlayout", onOpen);
 		};
 		$.index.addEventListener("postlayout", onOpen);
-		$.index.open();
+		$.index.open(); //ui transition methods
 	} else {
 		alert("Could not load assets.");
 	}
@@ -142,6 +144,7 @@ function createassetView(asset) {
 function downloadAndPlay(params){
 	var _ = require('alloy/underscore')._;
 	//alert(JSON.stringify(asset));
+	//search the file by id/ download and install
 	var myassets = [];
 	var remoteassets = [];
 	if(Ti.App.Properties.getString("myassets")) {
@@ -164,7 +167,7 @@ function downloadAndPlay(params){
 	    		params.onsuccess();
 	    	}
 		}
-	} else {
+	} else { //if its not up to date, download and play
 		if(!myasset || remoteasset["version"] > myasset["version"]){
 			Ti.API.info("asset "+params.asset["id"]+" is out of date, updating...");
 			if(params && params.ondownloadstart){
@@ -204,11 +207,12 @@ function downloadAndPlay(params){
 //TODO open in a webview... (problem with local storage)
 function play(asset) {
 	$.webviewBanner.url = "http://" + Alloy.CFG.thinServerHost + ":" + Alloy.CFG.thinServerPort + "/" + asset["id"] + "/index.html";
-}
+} //play calls index.html of the resource from within the thinserver
+//webview banner is the resource viewer
 
 function renderBanner() {
 	$.webviewBanner.addEventListener('load', function() {
-		proxy.appyProxyRule($.webviewBanner);
+		proxy.appyProxyRule($.webviewBanner); //proxy checks on all resource viewer request
 	});
 	$.webviewBanner.addEventListener('load', function(e) {
 		//$.logo.animate({opacity:0, duration:500});

@@ -5,7 +5,7 @@ var Repository = module.exports = function(){
 	this.tmpBannerZip = "banner.zip";
 	this.tmpassetZip = "asset.zip";
 };
-
+//goes to github to download and install github resources
 Repository.prototype.updateAndDownloadasset = function(params) {
 	var that = this;
 	if(this.repoConfig){
@@ -101,7 +101,7 @@ Repository.prototype.updateassets = function(params) {
 	}
 };
 
-
+// read the resource file on the remote repository
 Repository.prototype.load = function(params) {
 	var that = this;
 	var xhr = Titanium.Network.createHTTPClient();
